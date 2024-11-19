@@ -35,6 +35,7 @@ return {
           config = '#', -- Same
         },
       }
+      vim.keymap.set('n', '<leader>cc', ':Mutineer<CR>', { desc = '[C]ode action [C]omment line or selection in or out.' })
       vim.cmd [[autocmd BufNewFile,BufRead *.conf set filetype='conf']]
     end,
   },
