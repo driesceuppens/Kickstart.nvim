@@ -5,6 +5,7 @@ return {
       require('mutineer').setup {
         lineCommentSymbols = {
           asm = ';', -- Assembly
+          fortran = '!', -- Fortran
           c = '//', -- C
           cpp = '//', -- C++
           cs = '//', -- C#
@@ -36,6 +37,7 @@ return {
         },
       }
       vim.keymap.set('n', '<leader>cc', ':Mutineer<CR>', { desc = '[C]ode action [C]omment line or selection in or out.' })
+      vim.keymap.set('v', '<leader>cc', ":'<,'>Mutineer<CR>", { desc = '[C]ode action [C]omment line or selection in or out.' })
       vim.cmd [[autocmd BufNewFile,BufRead *.conf set filetype='conf']]
     end,
   },

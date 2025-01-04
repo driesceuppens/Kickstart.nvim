@@ -177,10 +177,10 @@ vim.keymap.set('t', '<Esc><Esc>', '<C-\\><C-n>', { desc = 'Exit terminal mode' }
 
 -- Add a comment
 -- TIP: Disable arrow keys in normal mode
--- vim.keymap.set('n', '<left>', '<cmd>echo "Use h to move!!"<CR>')
--- vim.keymap.set('n', '<right>', '<cmd>echo "Use l to move!!"<CR>')
--- vim.keymap.set('n', '<up>', '<cmd>echo "Use k to move!!"<CR>')
--- vim.keymap.set('n', '<down>', '<cmd>echo "Use j to move!!"<CR>')
+vim.keymap.set('n', '<left>', '<cmd>echo "Use h to move!!"<CR>')
+vim.keymap.set('n', '<right>', '<cmd>echo "Use l to move!!"<CR>')
+vim.keymap.set('n', '<up>', '<cmd>echo "Use k to move!!"<CR>')
+vim.keymap.set('n', '<down>', '<cmd>echo "Use j to move!!"<CR>')
 
 -- Keybinds to make split navigation easier.
 --  Use CTRL+<hjkl> to switch between windows
@@ -536,8 +536,6 @@ require('lazy').setup({
           --  Symbols are things like variables, functions, types, etc.
           map('<leader>ds', require('telescope.builtin').lsp_document_symbols, '[D]ocument [S]ymbols')
 
-          -- Fuzzy find all the symbols in your current workspace.
-          --  Similar to document symbols, except searches over your entire project.
           map('<leader>ws', require('telescope.builtin').lsp_dynamic_workspace_symbols, '[W]orkspace [S]ymbols')
 
           -- Rename the variable under your cursor.
@@ -612,8 +610,47 @@ require('lazy').setup({
       local servers = {
         -- clangd = {},
         -- gopls = {},
-        -- pyright = {},
+        pyright = {
+          analysis = {
+            autoSearchPaths = true,
+            diagnosticMode = 'openFilesOnly',
+            useLibraryCodeForTypes = true,
+          },
+        },
         -- rust_analyzer = {},
+        --        texlab = {
+        --          auxDirectory = '.',
+        --          chktex = {
+        --            onEdit = true,
+        --            onOpenAndSave = false,
+        --          },
+        --          diagnosticsDelay = 300,
+        --          formatterLineLength = 80,
+        --          forwardSearch = {
+        --            args = {},
+        --          },
+        --          latexFormatter = 'latexindent',
+        --          latexindent = {
+        --            modifyLineBreaks = false,
+        --          },
+        --        },
+        --        textLSP = {
+        --          analysers = {
+        --            languagetool = {
+        --              check_text = {
+        --                on_change = false,
+        --                on_open = true,
+        --                on_save = true,
+        --              },
+        --              enabled = true,
+        --            },
+        --          },
+        --          documents = {
+        --            org = {
+        --              org_todo_keywords = { 'TODO', 'IN_PROGRESS', 'DONE' },
+        --            },
+        --          },
+        --        },
         -- ... etc. See `:help lspconfig-all` for a list of all the pre-configured LSPs
         --
         -- Some languages (like typescript) have entire language plugins that can be useful:
@@ -654,7 +691,6 @@ require('lazy').setup({
         'stylua', -- Used to format Lua code
       })
       require('mason-tool-installer').setup { ensure_installed = ensure_installed }
-
       require('mason-lspconfig').setup {
         handlers = {
           function(server_name)
@@ -666,6 +702,8 @@ require('lazy').setup({
             require('lspconfig')[server_name].setup(server)
           end,
         },
+        ensure_installed = ensure_installed,
+        automatic_installation = {},
       }
     end,
   },
@@ -733,12 +771,12 @@ require('lazy').setup({
           -- `friendly-snippets` contains a variety of premade snippets.
           --    See the README about individual language/framework/plugin snippets:
           --    https://github.com/rafamadriz/friendly-snippets
-          -- {
-          --   'rafamadriz/friendly-snippets',
-          --   config = function()
-          --     require('luasnip.loaders.from_vscode').lazy_load()
-          --   end,
-          -- },
+          {
+            'rafamadriz/friendly-snippets',
+            config = function()
+              require('luasnip.loaders.from_vscode').lazy_load()
+            end,
+          },
         },
       },
       'saadparwaiz1/cmp_luasnip',
@@ -753,7 +791,23 @@ require('lazy').setup({
       -- See `:help cmp`
       local cmp = require 'cmp'
       local luasnip = require 'luasnip'
-      luasnip.config.setup {}
+      local types = require 'luasnip.unil.types'
+
+      luasnip.config.setup {
+        ext_opts = {
+          [types.choiceNode] = {
+            active = {
+              -- TODO: Make these colors follow catppuccin
+              virt_text = { { '●', 'GruvboxOrange' } },
+            },
+          },
+          [types.insertNode] = {
+            active = {
+              virt_text = { { '●', 'GruvboxBlue' } },
+            },
+          },
+        },
+      }
 
       cmp.setup {
         snippet = {
@@ -914,6 +968,7 @@ require('lazy').setup({
       auto_install = true,
       highlight = {
         enable = true,
+        disable = { 'latex' },
         -- Some languages depend on vim's regex highlighting system (such as Ruby) for indent rules.
         --  If you are experiencing weird indenting issues, add the language to
         --  the list of additional_vim_regex_highlighting and disabled languages for indent.

@@ -22,9 +22,29 @@ keymap.set({ 'n', 'x' }, '<leader>mk', ':wincmd K<CR>', { desc = 'Swap the curre
 keymap.set({ 'n', 'x' }, '<leader>mj', ':wincmd J<CR>', { desc = 'Swap the current split to the right.' })
 keymap.set({ 'n', 'x' }, '<leader>mh', ':wincmd H<CR>', { desc = 'Swap the current split to the right.' })
 
---local opts = { noremap = false, silent = true }
---keymap.set({"n", "x"}, "gc", ":Mutineer<CR>", opts)
---keymap.set({"n", "x"}, "gcc", ":Mutineer<CR>", opts)
---
--- Exit insert mode easier
---keymap.set("i", "jj", "<Esc>", opts)
+-- Manage tabs
+keymap.set({ 'n', 'x' }, '<C-t>', ':tabnew<CR>', { desc = 'Open a new tab' })
+keymap.set({ 'n', 'x' }, '<Tab>', ':tabnext<CR>', { desc = 'Open a new tab' })
+keymap.set({ 'n', 'x' }, '<S-Tab>', ':tabprev<CR>', { desc = 'Open a new tab' })
+
+-- Auto complete snippet from insert mode
+vim.keymap.set({ 'i' }, '<C-K>', function()
+  require('luasnip').expand()
+end, { silent = true })
+
+-- Jump to next
+vim.keymap.set({ 'i', 's' }, '<Tab>', function()
+  require('luasnip').jump(1)
+end, { silent = true })
+
+-- Jump to previous
+vim.keymap.set({ 'i', 's' }, '<S-Tab>', function()
+  require('luasnip').jump(-1)
+end, { silent = true })
+
+-- Change snippet choice
+vim.keymap.set({ 'i', 's' }, '<C-E>', function()
+  if require('luasnip').choice_active() then
+    require('luasnip').change_choice(1)
+  end
+end, { silent = true })
