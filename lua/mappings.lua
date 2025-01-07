@@ -4,7 +4,7 @@ local keymap = vim.keymap
 -- local uv = vim.loop
 
 -- enter commandmode
-keymap.set({ 'n', 'x' }, ';', ':', { silent = true, desc = 'Enter commandmode' })
+-- keymap.set({ 'n', 'x' }, ';', ':', { silent = true, desc = 'Enter commandmode' })
 
 -- resize splits
 keymap.set({ 'n', 'x', 'i' }, '<A-=>', '<c-w>+', { desc = 'Resize split to the top' })

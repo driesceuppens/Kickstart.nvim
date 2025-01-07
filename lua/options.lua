@@ -22,3 +22,5 @@ o.spelllang = 'en_gb'
 set.expandtab = true
 set.wrap = false
 set.swapfile = false
+
+set.foldmethod = 'marker'
